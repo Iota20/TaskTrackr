@@ -1,6 +1,7 @@
 package application;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class TaskManager {
@@ -15,14 +16,30 @@ public class TaskManager {
         return tasks;
     }
 
-    // 💾 Save tasks to file
+    // 💾 Save tasks to file (with due date + extras)
     public void saveTasks() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+
             for (Task t : tasks) {
-                String type = (t instanceof WorkTask) ? "Work" : "Personal";
-                writer.write(type + "|" + t.getTitle() + "|" + t.getDescription() + "|" + t.isCompleted());
+                if (t instanceof WorkTask wt) {
+                    writer.write("Work|" +
+                                 wt.getTitle() + "|" +
+                                 wt.getDescription() + "|" +
+                                 wt.getDueDate() + "|" +
+                                 wt.isCompleted() + "|" +
+                                 wt.getProject());
+                } 
+                else if (t instanceof PersonalTask pt) {
+                    writer.write("Personal|" +
+                                 pt.getTitle() + "|" +
+                                 pt.getDescription() + "|" +
+                                 pt.getDueDate() + "|" +
+                                 pt.isCompleted() + "|" +
+                                 pt.getCategory());
+                }
                 writer.newLine();
             }
+
         } catch (IOException e) {
             System.out.println("Error saving tasks: " + e.getMessage());
         }
@@ -30,29 +47,37 @@ public class TaskManager {
 
     // 📂 Load tasks from file
     public void loadTasks() {
+        tasks.clear();
         File file = new File(FILE_PATH);
         if (!file.exists()) return;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+
             String line;
             while ((line = reader.readLine()) != null) {
+
                 String[] parts = line.split("\\|");
-                if (parts.length < 4) continue;
+                if (parts.length < 6) continue;
 
                 String type = parts[0];
                 String title = parts[1];
                 String desc = parts[2];
-                boolean completed = Boolean.parseBoolean(parts[3]);
+                LocalDate dueDate = LocalDate.parse(parts[3]);
+                boolean completed = Boolean.parseBoolean(parts[4]);
+                String extra = parts[5];   // project or category
 
                 Task task;
+
                 if (type.equals("Work")) {
-                    task = new WorkTask(title, desc, "Project X");
+                    task = new WorkTask(title, desc, dueDate, extra);
                 } else {
-                    task = new PersonalTask(title, desc, "General");
+                    task = new PersonalTask(title, desc, dueDate, extra);
                 }
+
                 if (completed) task.markCompleted();
                 tasks.add(task);
             }
+
         } catch (IOException e) {
             System.out.println("Error loading tasks: " + e.getMessage());
         }
@@ -61,6 +86,6 @@ public class TaskManager {
     public void markTaskCompleted(int index) {
         if (index >= 0 && index < tasks.size()) {
             tasks.get(index).markCompleted();
+        }
     }
-}
 }
