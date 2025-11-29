@@ -16,7 +16,6 @@ public class TaskManager {
         return tasks;
     }
 
-    // 💾 Save tasks to file (with due date + extras)
     public void saveTasks() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
 
@@ -38,14 +37,14 @@ public class TaskManager {
                                  pt.getCategory());
                 }
                 writer.newLine();
+                System.out.println("Saving: " + t.getTitle());
             }
-
+            
         } catch (IOException e) {
             System.out.println("Error saving tasks: " + e.getMessage());
         }
     }
 
-    // 📂 Load tasks from file
     public void loadTasks() {
         tasks.clear();
         File file = new File(FILE_PATH);

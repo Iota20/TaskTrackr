@@ -16,7 +16,7 @@ public class PersonalTask extends Task {
     @Override
     public String displayDetails() {
         return "[Personal] " + title +
-               " | Category: " + category +
+               " | " + category +
                " | Due: " + dueDate +
                " | Completed: " + completed;
     }

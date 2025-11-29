@@ -16,7 +16,7 @@ public class WorkTask extends Task {
     @Override
     public String displayDetails() {
         return "[Work] " + title +
-               " | Project: " + project +
+               " | " + project +
                " | Due: " + dueDate +
                " | Completed: " + completed;
     }

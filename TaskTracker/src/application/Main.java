@@ -24,6 +24,8 @@ public class Main extends Application {
         TextField titleField = new TextField();
         Label descLbl = new Label("Description:");
         TextField descField = new TextField();
+        Label labelLbl = new Label("Label");
+        TextField lblField = new TextField();
         Label dueLbl = new Label("Due Date:");
         DatePicker dueDatePicker = new DatePicker();
 
@@ -38,7 +40,7 @@ public class Main extends Application {
         Button deleteBtn = new Button("Delete Task");
         Button editBtn = new Button("Edit Task");
 
-        filterBox.getItems().addAll("All", "Completed", "Pending");
+        filterBox.getItems().addAll("All", "Completed", "Pending", "On Hold");
         filterBox.setValue("All");
         filterBox.setOnAction(e -> refreshList());
 
@@ -48,12 +50,13 @@ public class Main extends Application {
             String desc = descField.getText().trim();
             LocalDate due = dueDatePicker.getValue();
             String type = typeBox.getValue();
+            String lbl = lblField.getText().trim();
 
             if (title.isEmpty() || due == null) return;
 
             Task newTask = type.equals("Work") ?
-                new WorkTask(title, desc, due, "Project X") :
-                new PersonalTask(title, desc, due, "General");
+                new WorkTask(title, desc, due, lbl) :
+                new PersonalTask(title, desc, due, lbl);
 
             manager.addTask(newTask);
             refreshList();
@@ -101,12 +104,12 @@ public class Main extends Application {
 
         VBox layout = new VBox(10);
         layout.setStyle("-fx-padding: 15;");
-        layout.getChildren().addAll(titleLbl, titleField, descLbl, descField, dueLbl, typeBox,
+        layout.getChildren().addAll(titleLbl, titleField, labelLbl, lblField, descLbl, descField, dueLbl, dueDatePicker, typeBox,
                 buttons, filterRow, taskList);
 
-        Scene scene = new Scene(layout, 400, 450);
+        Scene scene = new Scene(layout, 600, 450);
         stage.setScene(scene);
-        stage.setTitle("Task Manager OOP");
+        stage.setTitle("Task Tracker");
         stage.show();
     }
 
