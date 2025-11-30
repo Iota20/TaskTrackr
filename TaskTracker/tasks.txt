@@ -1,2 +1,1 @@
-Work|task1.1|do this and do that|2025-11-29|true|Project X
-Work|Task2|do those|2025-11-27|false|Projects
+WORK;Task1 ;do this version 1;2025-12-02;ON_HOLD;do that thing
